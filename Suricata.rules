@@ -1,0 +1,30 @@
+# 1
+alert dns $HOME_NET any -> any any (msg:"Possible Citi Phishing 
+Attempt Observed in DNS Query "; dns_query; content:"online.citi.com"; 
+nocase; isdataat:1,relative; sid:3; rev:1;)
+
+#2 
+alert tls $EXTERNAL_NET any -> $HOME_NET any (msg:"TROJAN Activity 
+Observed Malicious SSL Cert (Qadars CnC)"; flow:established,to_client; 
+tls_cert_subject; content:"CN=susana24.com"; classtype:trojanactivity; sid:4; rev:1;)
+
+# 3
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:" TROJAN 7ev3n 
+Ransomware CnC Checkin"; flow:established,to_server; content:"GET"; 
+http_method; content:".php?RIGHTS="; http_uri; content:"&WIN="; 
+http_uri; distance:0; content:"&WALLET="; http_uri; distance:0; 
+content:"&ID="; http_uri; distance:0; content:"&UI="; http_uri; 
+distance:0; content:"Internet|20|Explorer"; http_user_agent; depth:17; 
+isdataat:!1,relative; http_header_names; content:!"Referer"; 
+content:!"Accept"; sid:5; rev:1;)
+
+#4 
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:" TROJAN 7ev3n 
+Ransomware Encryption Activity"; flow:established,to_server; 
+content:"GET"; http_method; content:".php?SSTART="; http_uri; 
+content:"&CRYPTED_DATA="; http_uri; distance:0; content:"&ID="; 
+http_uri; distance:0; content:"&FILES="; http_uri; distance:0; 
+content:"&UI="; http_uri; distance:0; content:"Internet|20|Explorer"; 
+http_user_agent; depth:17; isdataat:!1,relative; http_header_names; 
+content:!"Referer"; content:!"Accept"; sid:6; rev:1;)
